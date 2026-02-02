@@ -19,6 +19,13 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
   );
 
   @override
+  void initState() {
+    super.initState();
+    final stats = Provider.of<StatsServices>(context, listen: false);
+    stats.getWorldStats();
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _controller.dispose();
@@ -38,10 +45,6 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
           padding: const EdgeInsets.all(12.0),
           child: Consumer<StatsServices>(
             builder: (ctx, val, ch) {
-              if (val.worldStats == null && !val.loading) {
-                val.getWorldStats();
-              }
-
               if (val.loading) {
                 return SpinKitFadingCircle(
                   color: Colors.green,

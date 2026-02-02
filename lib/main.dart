@@ -4,8 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(Provider(create: (context) => StatsServices(), child: const MyApp()));
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => StatsServices(),
+      child: const MyApp(),
+    ),
+  );
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override

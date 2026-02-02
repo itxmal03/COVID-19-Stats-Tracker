@@ -21,6 +21,7 @@ class _CountriesListState extends State<CountriesList> {
       stats.getCountriesList();
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +37,18 @@ class _CountriesListState extends State<CountriesList> {
               padding: const EdgeInsets.all(10.0),
               child: TextFormField(
                 onChanged: (value) {
-                  setState(() {});
+                  Provider.of<StatsServices>(
+                    context,
+                    listen: false,
+                  ).filterCountries(value);
                 },
                 controller: searchController,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                   hintText: 'Search with country name',
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50),
                   ),
@@ -83,77 +90,47 @@ class _CountriesListState extends State<CountriesList> {
                     ),
                   );
                 }
+
+                if (val.filteredCountriesList.isEmpty &&
+                    !val.loadingCountries) {
+                  return Center(child: Text("No countries found."));
+                }
                 return Expanded(
                   child: ListView.builder(
-                    itemCount: val.countriesList.length,
+                    itemCount: val.filteredCountriesList.length,
                     itemBuilder: (context, index) {
-                      String countryName = val.countriesList[index]['country'];
-
-                      if (searchController.text.isEmpty) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListTile(
-                            leading: SizedBox(
-                              height: 35,
-                              width: 50,
-                              child: ClipRRect(
-                                child: Image.network(
-                                  val.countriesList[index]['countryInfo']['flag'],
-                                  height: 50,
-                                  width: 50,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Icon(Icons.flag),
-                                ),
+                      String countryName =
+                          val.filteredCountriesList[index]['country'];
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListTile(
+                          leading: SizedBox(
+                            height: 35,
+                            width: 50,
+                            child: ClipRRect(
+                              child: Image.network(
+                                val.filteredCountriesList[index]['countryInfo']['flag'],
+                                height: 50,
+                                width: 50,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Icon(Icons.flag),
                               ),
-                            ),
-                            title: Text(
-                              val.countriesList[index]['country'],
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                              ),
-                            ),
-                            subtitle: Text(
-                              val.countriesList[index]['cases'].toString(),
                             ),
                           ),
-                        );
-                      } else if (countryName.toLowerCase().contains(
-                        searchController.text.toLowerCase(),
-                      )) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListTile(
-                            leading: SizedBox(
-                              height: 35,
-                              width: 50,
-                              child: ClipRRect(
-                                child: Image.network(
-                                  val.countriesList[index]['countryInfo']['flag'],
-                                  height: 50,
-                                  width: 50,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Icon(Icons.flag),
-                                ),
-                              ),
-                            ),
-                            title: Text(
-                              countryName,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                              ),
-                            ),
-                            subtitle: Text(
-                              val.countriesList[index]['cases'].toString(),
+                          title: Text(
+                            countryName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
                             ),
                           ),
-                        );
-                      } else {
-                        return Container();
-                      }
+                          subtitle: Text(
+                            val.filteredCountriesList[index]['cases']
+                                .toString(),
+                          ),
+                        ),
+                      );
                     },
                   ),
                 );

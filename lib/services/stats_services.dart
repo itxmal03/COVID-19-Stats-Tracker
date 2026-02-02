@@ -58,6 +58,7 @@ class StatsServices extends ChangeNotifier {
   Future<void> getCountriesList() async {
     _loadingCountries = true;
     _errorCountries = null;
+    _filteredCountriesList = [];
     notifyListeners();
     try {
       final response = await http
@@ -66,6 +67,7 @@ class StatsServices extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         _countriesList = jsonDecode(response.body);
+        _filteredCountriesList = List.from(_countriesList);
         _loadingCountries = false;
         notifyListeners();
       } else {
@@ -103,15 +105,19 @@ class StatsServices extends ChangeNotifier {
     }
   }
 
+  Timer? _debounce;
   void filterCountries(String query) {
-    if (query.isEmpty) {
-      _filteredCountriesList = List.from(_countriesList);
-    } else {
-      _filteredCountriesList = _countriesList.where((country) {
-        final name = country['country'].toString().toLowerCase();
-        return name.contains(query.toLowerCase());
-      }).toList();
-    }
-    notifyListeners();
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      if (query.isEmpty) {
+        _filteredCountriesList = List.from(_countriesList);
+      } else {
+        _filteredCountriesList = _countriesList.where((country) {
+          final name = country['country'].toString().toLowerCase();
+          return name.contains(query.toLowerCase());
+        }).toList();
+      }
+      notifyListeners();
+    });
   }
 }
