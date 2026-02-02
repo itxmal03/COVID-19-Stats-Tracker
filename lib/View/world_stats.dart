@@ -43,13 +43,10 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
               }
 
               if (val.loading) {
-                return Expanded(
-                  flex: 1,
-                  child: SpinKitFadingCircle(
-                    color: Colors.green,
-                    controller: _controller,
-                    size: 50,
-                  ),
+                return SpinKitFadingCircle(
+                  color: Colors.green,
+                  controller: _controller,
+                  size: 50,
                 );
               }
               if (val.worldStats == null) {

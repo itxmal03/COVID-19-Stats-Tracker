@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 class StatsServices extends ChangeNotifier {
   WorldStatsModel? _worldStats;
   List<dynamic> _countriesList = [];
+  List<dynamic> _filteredCountriesList = [];
   bool _loading = false;
   bool _loadingCountries = false;
   String? _errorStats;
@@ -16,6 +17,8 @@ class StatsServices extends ChangeNotifier {
 
   WorldStatsModel? get worldStats => _worldStats;
   List<dynamic> get countriesList => _countriesList;
+  List<dynamic> get filteredCountriesList => _filteredCountriesList;
+
   String? get errorStats => _errorStats;
   String? get errorCountries => _errorCountries;
 
@@ -34,6 +37,8 @@ class StatsServices extends ChangeNotifier {
       if (response.statusCode == 200) {
         final decode = jsonDecode(response.body);
         _worldStats = WorldStatsModel.fromJson(decode);
+        _loading = false;
+        notifyListeners();
       } else {
         _worldStats = null;
         _errorStats = _mapStatusCode(response.statusCode);
@@ -61,6 +66,8 @@ class StatsServices extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         _countriesList = jsonDecode(response.body);
+        _loadingCountries = false;
+        notifyListeners();
       } else {
         _countriesList = [];
         _errorCountries = _mapStatusCode(response.statusCode);
@@ -94,5 +101,17 @@ class StatsServices extends ChangeNotifier {
       default:
         return 'Unexpected error occurred';
     }
+  }
+
+  void filterCountries(String query) {
+    if (query.isEmpty) {
+      _filteredCountriesList = List.from(_countriesList);
+    } else {
+      _filteredCountriesList = _countriesList.where((country) {
+        final name = country['country'].toString().toLowerCase();
+        return name.contains(query.toLowerCase());
+      }).toList();
+    }
+    notifyListeners();
   }
 }
