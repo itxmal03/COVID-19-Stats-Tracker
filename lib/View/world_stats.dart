@@ -1,5 +1,6 @@
 import 'package:covid_tracker/View/countries_list.dart';
 import 'package:covid_tracker/services/stats_services.dart';
+import 'package:covid_tracker/services/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -43,8 +44,8 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Consumer<StatsServices>(
-            builder: (ctx, val, ch) {
+          child: Consumer2<StatsServices, ThemeProvider>(
+            builder: (ctx, val, theme, child) {
               if (val.loading) {
                 return SpinKitFadingCircle(
                   color: Colors.green,
@@ -58,8 +59,34 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
                 return SingleChildScrollView(
                   child: Column(
                     children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: PopupMenuButton(
+                          icon: Icon(Icons.more_vert),
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              child: StatefulBuilder(
+                                builder: (context, setState) => Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Dark Mode'),
+                                    Transform.scale(
+                                      scale: 0.7, // 70% of original size
+                                      child: Switch(
+                                        value: theme.isDark,
+                                        onChanged: (value) {
+                                          theme.updateTheme(value);
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       PieChart(
                         dataMap: {

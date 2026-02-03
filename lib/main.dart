@@ -26,12 +26,16 @@ class MyApp extends StatelessWidget {
       title: 'Covid-19 Tracker',
       themeMode: themeSwitch.isDark ? ThemeMode.dark : ThemeMode.light,
       darkTheme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Color(0xff2d6a4f)),
-        brightness: Brightness.dark,
+        colorScheme: .fromSeed(
+          seedColor: Color(0xff2d6a4f),
+          brightness: Brightness.dark,
+        ),
       ),
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Color(0xff2d6a4f)),
-        brightness: Brightness.light,
+        colorScheme: .fromSeed(
+          seedColor: Color(0xff2d6a4f),
+          brightness: Brightness.light,
+        ),
       ),
       home: const SplashScreen(),
     );
