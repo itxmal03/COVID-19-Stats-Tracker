@@ -27,13 +27,13 @@ class MyApp extends StatelessWidget {
       themeMode: themeSwitch.isDark ? ThemeMode.dark : ThemeMode.light,
       darkTheme: ThemeData(
         colorScheme: .fromSeed(
-          seedColor: Color(0xff2d6a4f),
+          seedColor: Color(0xff1E88E5),
           brightness: Brightness.dark,
         ),
       ),
       theme: ThemeData(
         colorScheme: .fromSeed(
-          seedColor: Color(0xff2d6a4f),
+          seedColor: Color(0xff1E88E5),
           brightness: Brightness.light,
         ),
       ),

@@ -33,9 +33,9 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
   }
 
   final colorList = <Color>[
-    const Color(0xff4A90E2),
-    const Color(0xff34a0a4),
-    const Color(0xff7ED321),
+    const Color(0xff1E88E5),
+    const Color(0xff43A047),
+    const Color(0xffFF5252),
   ];
 
   @override
@@ -93,11 +93,11 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
                           'Total': double.parse(
                             val.worldStats!.cases.toString(),
                           ),
-                          'Deaths': double.parse(
-                            val.worldStats!.deaths.toString(),
-                          ),
                           'Recovered': double.parse(
                             val.worldStats!.recovered.toString(),
+                          ),
+                          'Deaths': double.parse(
+                            val.worldStats!.deaths.toString(),
                           ),
                         },
                         chartValuesOptions: const ChartValuesOptions(
@@ -194,7 +194,7 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
                         child: Container(
                           height: MediaQuery.of(context).size.height * 0.05,
                           decoration: BoxDecoration(
-                            color: const Color(0xff34a0a4),
+                            color: const Color(0xff1E88E5),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Center(
@@ -229,3 +229,4 @@ class ReuseableRow extends StatelessWidget {
     );
   }
 }
+1E88E5
