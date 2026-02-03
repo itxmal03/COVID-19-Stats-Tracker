@@ -1,3 +1,4 @@
+import 'package:covid_tracker/View/details_screen.dart';
 import 'package:covid_tracker/services/stats_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,6 @@ class _CountriesListState extends State<CountriesList> {
       stats.getCountriesList();
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +47,7 @@ class _CountriesListState extends State<CountriesList> {
                   contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                   hintText: 'Search with country name',
                   focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   enabledBorder: OutlineInputBorder(
@@ -90,7 +91,6 @@ class _CountriesListState extends State<CountriesList> {
                     ),
                   );
                 }
-
                 if (val.filteredCountriesList.isEmpty &&
                     !val.loadingCountries) {
                   return Center(child: Text("No countries found."));
@@ -104,6 +104,41 @@ class _CountriesListState extends State<CountriesList> {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailsScreen(
+                                  countryName: countryName,
+                                  active: val
+                                      .filteredCountriesList[index]['active']
+                                      .toString(),
+                                  population: val
+                                      .filteredCountriesList[index]['population']
+                                      .toString(),
+                                  todayCases: val
+                                      .filteredCountriesList[index]['todayCases']
+                                      .toString(),
+                                  totalDeaths: val
+                                      .filteredCountriesList[index]['deaths']
+                                      .toString(),
+                                  totalCases: val
+                                      .filteredCountriesList[index]['cases']
+                                      .toString(),
+                                  totalRecovered: val
+                                      .filteredCountriesList[index]['recovered']
+                                      .toString(),
+                                  image: val
+                                      .filteredCountriesList[index]['countryInfo']['flag'],
+                                  continent: val
+                                      .filteredCountriesList[index]['continent'],
+                                  crtitcal: val
+                                      .filteredCountriesList[index]['critical']
+                                      .toString(),
+                                ),
+                              ),
+                            );
+                          },
                           leading: SizedBox(
                             height: 35,
                             width: 50,
@@ -118,6 +153,7 @@ class _CountriesListState extends State<CountriesList> {
                               ),
                             ),
                           ),
+                          trailing: Icon(Icons.arrow_forward_ios),
                           title: Text(
                             countryName,
                             style: TextStyle(
