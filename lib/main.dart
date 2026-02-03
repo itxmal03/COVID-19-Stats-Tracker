@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       ),
       theme: ThemeData(
         colorScheme: .fromSeed(
-          seedColor: Color(0xff1E88E5),
+          seedColor: const Color(0xff1E88E5),
           brightness: Brightness.light,
         ),
       ),

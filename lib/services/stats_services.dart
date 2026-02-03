@@ -120,4 +120,9 @@ class StatsServices extends ChangeNotifier {
       notifyListeners();
     });
   }
+
+  void resetFilteredCountries() {
+    _filteredCountriesList = List.from(_countriesList);
+    notifyListeners();
+  }
 }

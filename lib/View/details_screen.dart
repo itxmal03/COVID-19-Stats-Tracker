@@ -53,7 +53,22 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ReuseableRow(title: 'Continent', value: widget.continent),
+                    ListTile(
+                      title: Text(
+                        'Continent',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                        ),
+                      ),
+                      trailing: Text(
+                        widget.continent,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
                     ReuseableRow(title: 'Active Cases', value: widget.active),
                     ReuseableRow(
                       title: 'Critical Cases',

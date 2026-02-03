@@ -1,6 +1,7 @@
 import 'package:covid_tracker/View/countries_list.dart';
 import 'package:covid_tracker/services/stats_services.dart';
 import 'package:covid_tracker/services/theme_provider.dart';
+import 'package:covid_tracker/services/utilities/number_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -105,15 +106,19 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
                         ),
                         colorList: colorList,
                         animationDuration: const Duration(milliseconds: 1200),
-                        chartRadius: MediaQuery.of(context).size.width / 3,
+                        chartRadius: MediaQuery.of(context).size.width / 3.2,
                         legendOptions: const LegendOptions(
-                          legendPosition: .left,
+                          legendTextStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                          legendPosition: LegendPosition.left,
                         ),
-                        chartType: .ring,
+                        chartType: ChartType.ring,
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(
-                          vertical: MediaQuery.of(context).size.height * 0.03,
+                          vertical: MediaQuery.of(context).size.height * 0.015,
                         ),
                         child: Card(
                           child: Padding(
@@ -220,13 +225,17 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
 class ReuseableRow extends StatelessWidget {
   final String title, value;
   const ReuseableRow({super.key, required this.title, required this.value});
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(title, style: TextStyle(fontWeight: .bold)),
-      trailing: Text(value),
+      title: Text(
+        title,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+      ),
+      trailing: Text(
+        NumberFormatter.format(double.parse(value)),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+      ),
     );
   }
 }
-1E88E5

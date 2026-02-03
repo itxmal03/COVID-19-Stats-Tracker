@@ -1,5 +1,6 @@
 import 'package:covid_tracker/View/details_screen.dart';
 import 'package:covid_tracker/services/stats_services.dart';
+import 'package:covid_tracker/services/utilities/number_format.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -17,10 +18,20 @@ class _CountriesListState extends State<CountriesList> {
   @override
   void initState() {
     super.initState();
+    searchController.clear();
     final stats = Provider.of<StatsServices>(context, listen: false);
     if (stats.countriesList.isEmpty) {
       stats.getCountriesList();
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final stats = Provider.of<StatsServices>(context, listen: false);
+    stats
+        .resetFilteredCountries(); // Reset filtered list every time screen appears
+    searchController.clear(); // Clear the search bar
   }
 
   @override
@@ -45,14 +56,26 @@ class _CountriesListState extends State<CountriesList> {
                 controller: searchController,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+
                   hintText: 'Search with country name',
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green),
-                    borderRadius: BorderRadius.circular(50),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black54,
                   ),
-                  enabledBorder: OutlineInputBorder(
+                  filled: true,
+                  fillColor: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey[800]
+                      : Colors.grey[200],
+                  border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50),
+                    borderSide: BorderSide.none,
                   ),
+
+                  // enabledBorder: OutlineInputBorder(
+                  //   borderRadius: BorderRadius.circular(50),
+                  // ),
                 ),
               ),
             ),
@@ -162,8 +185,14 @@ class _CountriesListState extends State<CountriesList> {
                             ),
                           ),
                           subtitle: Text(
-                            val.filteredCountriesList[index]['cases']
-                                .toString(),
+                            NumberFormatter.format(
+                              double.tryParse(
+                                    val.filteredCountriesList[index]['cases']
+                                            ?.toString() ??
+                                        '0',
+                                  ) ??
+                                  0,
+                            ),
                           ),
                         ),
                       );
