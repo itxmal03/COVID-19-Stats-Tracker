@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:covid_tracker/models/worldstats_model.dart';
 import 'package:covid_tracker/services/utilities/app_url.dart';
 import 'package:flutter/material.dart';
@@ -25,15 +26,29 @@ class StatsServices extends ChangeNotifier {
   bool get loading => _loading;
   bool get loadingCountries => _loadingCountries;
 
+  Future<bool> _hasInternet() async {
+    final result = await Connectivity().checkConnectivity();
+    return result != ConnectivityResult.none;
+  }
+
   Future<void> getWorldStats() async {
     _loading = true;
     _errorStats = null;
     notifyListeners();
+
+    //  Internet check
+    if (!await _hasInternet()) {
+      _loading = false;
+      _errorStats = 'No internet connection';
+      notifyListeners();
+      return;
+    }
+
     try {
       final response = await http
           .get(Uri.parse(AppUrl.worldStatsApi))
           .timeout(const Duration(seconds: 10));
-
+    
       if (response.statusCode == 200) {
         final decode = jsonDecode(response.body);
         _worldStats = WorldStatsModel.fromJson(decode);
@@ -60,6 +75,14 @@ class StatsServices extends ChangeNotifier {
     _errorCountries = null;
     _filteredCountriesList = [];
     notifyListeners();
+
+    // internet check
+    if (!await _hasInternet()) {
+      _loading = false;
+      _errorCountries = 'No internet connection';
+      notifyListeners();
+      return;
+    }
     try {
       final response = await http
           .get(Uri.parse(AppUrl.countriesList))

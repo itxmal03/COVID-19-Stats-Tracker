@@ -48,8 +48,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
             Padding(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.077,
+                left: MediaQuery.of(context).size.height * 0.007,
+                right: MediaQuery.of(context).size.height * 0.007,
               ),
               child: Card(
+                elevation: 3,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

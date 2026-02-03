@@ -4,5 +4,4 @@ class AppUrl {
   static const String worldStatsApi = '${baseUrl}all';
 
   static const String countriesList = '${baseUrl}countries';
-
 }

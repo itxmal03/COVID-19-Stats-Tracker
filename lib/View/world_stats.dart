@@ -24,7 +24,9 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     final stats = Provider.of<StatsServices>(context, listen: false);
-    stats.getWorldStats();
+    if (stats.worldStats == null && !stats.loading) {
+      stats.getWorldStats();
+    }
   }
 
   @override
@@ -47,13 +49,52 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
           padding: const EdgeInsets.all(12.0),
           child: Consumer2<StatsServices, ThemeProvider>(
             builder: (ctx, val, theme, child) {
+              print('LOADING = ${val.loading}');
+
               if (val.loading) {
                 return SpinKitFadingCircle(
-                  color: Colors.green,
+                  color: const Color(0xff1E88E5),
                   controller: _controller,
                   size: 50,
                 );
               }
+              if (val.errorStats != null) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        val.errorStats.toString(),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      InkWell(
+                        onTap: () {
+                          context.read<StatsServices>().getWorldStats();
+                        },
+                        child: Icon(
+                          Icons.refresh,
+                          size: 50,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          context.read<StatsServices>().getWorldStats();
+                        },
+                        child: const Text(
+                          "Retry",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
               if (val.worldStats == null) {
                 return Text('No data found!');
               } else {
@@ -121,6 +162,7 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
                           vertical: MediaQuery.of(context).size.height * 0.015,
                         ),
                         child: Card(
+                          elevation: 3,
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Center(

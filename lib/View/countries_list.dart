@@ -38,7 +38,11 @@ class _CountriesListState extends State<CountriesList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          'Affected Countries',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       body: SafeArea(
@@ -114,6 +118,44 @@ class _CountriesListState extends State<CountriesList> {
                     ),
                   );
                 }
+                if (val.errorCountries != null) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                      ),
+                      Text(
+                        val.errorCountries.toString(),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      InkWell(
+                        onTap: () {
+                          context.read<StatsServices>().getCountriesList();
+                        },
+                        child: Icon(
+                          Icons.refresh,
+                          size: 50,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          context.read<StatsServices>().getCountriesList();
+                        },
+                        child: const Text(
+                          "Retry",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+
                 if (val.filteredCountriesList.isEmpty &&
                     !val.loadingCountries) {
                   return Center(child: Text("No countries found."));

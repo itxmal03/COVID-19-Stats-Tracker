@@ -20,18 +20,22 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    super.dispose();
-    _controller.dispose();
+    _timer?.cancel(); //  cancel timer first
+    _controller.dispose(); //  stop ticker
+    super.dispose(); // dispose widget LAST
   }
 
+  Timer? _timer;
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 5), () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => WorldStats()),
-      );
+    _timer = Timer(const Duration(seconds: 5), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const WorldStats()),
+        );
+      }
     });
   }
 
@@ -60,12 +64,11 @@ class _SplashScreenState extends State<SplashScreen>
             Align(
               alignment: .center,
               child: Text(
-                "Covid-19\nStats",
+                "COVID-19\n Latest Stats",
                 textAlign: .center,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
               ),
             ),
-           
           ],
         ),
       ),
