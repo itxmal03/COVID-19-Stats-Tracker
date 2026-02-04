@@ -36,7 +36,6 @@ class StatsServices extends ChangeNotifier {
     _errorStats = null;
     notifyListeners();
 
-    //  Internet check
     if (!await _hasInternet()) {
       _loading = false;
       _errorStats = 'No internet connection';
@@ -48,22 +47,17 @@ class StatsServices extends ChangeNotifier {
       final response = await http
           .get(Uri.parse(AppUrl.worldStatsApi))
           .timeout(const Duration(seconds: 10));
-    
+
       if (response.statusCode == 200) {
-        final decode = jsonDecode(response.body);
-        _worldStats = WorldStatsModel.fromJson(decode);
-        _loading = false;
-        notifyListeners();
+        _worldStats = WorldStatsModel.fromJson(jsonDecode(response.body));
       } else {
         _worldStats = null;
         _errorStats = _mapStatusCode(response.statusCode);
       }
-    } catch (e) {
-      if (e is TimeoutException) {
-        _errorStats = 'Request timed out!';
-      } else {
-        _errorStats = 'Failed to load data!';
-      }
+    } on TimeoutException {
+      _errorStats = 'Request timed out!';
+    } catch (_) {
+      _errorStats = 'Failed to load data!';
     } finally {
       _loading = false;
       notifyListeners();
@@ -73,16 +67,15 @@ class StatsServices extends ChangeNotifier {
   Future<void> getCountriesList() async {
     _loadingCountries = true;
     _errorCountries = null;
-    _filteredCountriesList = [];
     notifyListeners();
 
-    // internet check
     if (!await _hasInternet()) {
-      _loading = false;
+      _loadingCountries = false;
       _errorCountries = 'No internet connection';
       notifyListeners();
       return;
     }
+
     try {
       final response = await http
           .get(Uri.parse(AppUrl.countriesList))
@@ -91,18 +84,14 @@ class StatsServices extends ChangeNotifier {
       if (response.statusCode == 200) {
         _countriesList = jsonDecode(response.body);
         _filteredCountriesList = List.from(_countriesList);
-        _loadingCountries = false;
-        notifyListeners();
       } else {
         _countriesList = [];
         _errorCountries = _mapStatusCode(response.statusCode);
       }
-    } catch (e) {
-      if (e is TimeoutException) {
-        _errorCountries = 'Request timed out!';
-      } else {
-        _errorCountries = 'Failed to load data!';
-      }
+    } on TimeoutException {
+      _errorCountries = 'Request timed out!';
+    } catch (_) {
+      _errorCountries = 'Failed to load data!';
     } finally {
       _loadingCountries = false;
       notifyListeners();

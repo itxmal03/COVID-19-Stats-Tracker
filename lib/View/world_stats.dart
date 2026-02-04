@@ -1,4 +1,5 @@
 import 'package:covid_tracker/View/countries_list.dart';
+import 'package:covid_tracker/services/chart.dart';
 import 'package:covid_tracker/services/stats_services.dart';
 import 'package:covid_tracker/services/theme_provider.dart';
 import 'package:covid_tracker/services/utilities/number_format.dart';
@@ -35,11 +36,11 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
     _controller.dispose();
   }
 
-  final colorList = <Color>[
-    const Color(0xff1E88E5),
-    const Color(0xff43A047),
-    const Color(0xffFF5252),
-  ];
+  // final colorList = <Color>[
+  //   const Color(0xff1E88E5),
+  //   const Color(0xff43A047),
+  //   const Color(0xffFF5252),
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +48,8 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Consumer2<StatsServices, ThemeProvider>(
-            builder: (ctx, val, theme, child) {
-              print('LOADING = ${val.loading}');
-
+          child: Consumer<StatsServices>(
+            builder: (ctx, val, child) {
               if (val.loading) {
                 return SpinKitFadingCircle(
                   color: const Color(0xff1E88E5),
@@ -66,7 +65,7 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
                       Text(
                         val.errorStats.toString(),
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -77,7 +76,7 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
                         },
                         child: Icon(
                           Icons.refresh,
-                          size: 50,
+                          size: 40,
                           color: Colors.blue,
                         ),
                       ),
@@ -87,7 +86,7 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
                         },
                         child: const Text(
                           "Retry",
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(fontSize: 16),
                         ),
                       ),
                     ],
@@ -107,8 +106,8 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
                           icon: Icon(Icons.more_vert),
                           itemBuilder: (context) => [
                             PopupMenuItem(
-                              child: StatefulBuilder(
-                                builder: (context, setState) => Row(
+                              child: Consumer<ThemeProvider>(
+                                builder: (ct, theme, c) => Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
@@ -130,41 +129,27 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
                           ],
                         ),
                       ),
-                      PieChart(
-                        dataMap: {
-                          'Total': double.parse(
-                            val.worldStats!.cases.toString(),
-                          ),
-                          'Recovered': double.parse(
-                            val.worldStats!.recovered.toString(),
-                          ),
-                          'Deaths': double.parse(
-                            val.worldStats!.deaths.toString(),
-                          ),
-                        },
-                        chartValuesOptions: const ChartValuesOptions(
-                          showChartValuesInPercentage: true,
-                        ),
-                        colorList: colorList,
-                        animationDuration: const Duration(milliseconds: 1200),
-                        chartRadius: MediaQuery.of(context).size.width / 3.2,
-                        legendOptions: const LegendOptions(
-                          legendTextStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
-                          legendPosition: LegendPosition.left,
-                        ),
-                        chartType: ChartType.ring,
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
                       ),
+                      Consumer<StatsServices>(
+                        builder: (context, val, child) {
+                          if (val.worldStats != null) {
+                            return AnimatedWorldStatsChart(
+                              worldStats: val.worldStats!,
+                            );
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        },
+                      ),
+
                       Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: MediaQuery.of(context).size.height * 0.015,
-                        ),
+                        padding: const EdgeInsets.all(8.0),
                         child: Card(
                           elevation: 3,
                           child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: Center(
                               child: Column(
                                 children: [
@@ -229,25 +214,28 @@ class _WorldStatsState extends State<WorldStats> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CountriesList(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CountriesList(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                            decoration: BoxDecoration(
+                              color: const Color(0xff1E88E5),
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                          );
-                        },
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          decoration: BoxDecoration(
-                            color: const Color(0xff1E88E5),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Track Countries",
-                              style: TextStyle(fontWeight: .bold),
+                            child: Center(
+                              child: Text(
+                                "Track Countries",
+                                style: TextStyle(fontWeight: .bold),
+                              ),
                             ),
                           ),
                         ),
@@ -270,13 +258,14 @@ class ReuseableRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      dense: true,
       title: Text(
         title,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
       ),
       trailing: Text(
         NumberFormatter.format(double.parse(value)),
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
       ),
     );
   }

@@ -44,29 +44,52 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: .center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            AnimatedBuilder(
-              animation: _controller,
-              child: SizedBox(
-                width: 200,
-                height: 200,
-                child: Image(image: AssetImage('assets/logo.png')),
-              ),
-              builder: (BuildContext context, Widget? child) {
-                return Transform.rotate(
-                  angle: _controller.value * 2.0 * math.pi,
-                  child: child,
-                );
-              },
+            Column(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+                AnimatedBuilder(
+                  animation: _controller,
+                  child: SizedBox(
+                    width: 200,
+                    height: 200,
+                    child: Image(image: AssetImage('assets/logo.png')),
+                  ),
+                  builder: (BuildContext context, Widget? child) {
+                    return Transform.rotate(
+                      angle: _controller.value * 2.0 * math.pi,
+                      child: child,
+                    );
+                  },
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+                Align(
+                  alignment: .center,
+                  child: Text(
+                    "COVID-19\nStats",
+                    textAlign: .center,
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+
+            SizedBox(height: MediaQuery.of(context).size.height * 0.05),
             Align(
-              alignment: .center,
-              child: Text(
-                "COVID-19\n Latest Stats",
-                textAlign: .center,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                children: [
+                  Text(
+                    'Powered by',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                  Text(
+                    'Al-Najaf IT Solutions',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                  ),
+                ],
               ),
             ),
           ],

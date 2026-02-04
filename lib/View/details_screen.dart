@@ -53,57 +53,95 @@ class _DetailsScreenState extends State<DetailsScreen> {
               ),
               child: Card(
                 elevation: 3,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ListTile(
-                      title: Text(
-                        'Continent',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        title: Text(
+                          'Continent',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                        trailing: Text(
+                          widget.continent,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
-                      trailing: Text(
-                        widget.continent,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
+                      ReuseableRow(title: 'Active Cases', value: widget.active),
+                      ReuseableRow(
+                        title: 'Critical Cases',
+                        value: widget.crtitcal,
                       ),
-                    ),
-                    ReuseableRow(title: 'Active Cases', value: widget.active),
-                    ReuseableRow(
-                      title: 'Critical Cases',
-                      value: widget.crtitcal,
-                    ),
-                    ReuseableRow(
-                      title: 'Today Cases',
-                      value: widget.todayCases,
-                    ),
-                    ReuseableRow(
-                      title: 'Total Cases',
-                      value: widget.totalCases,
-                    ),
-                    ReuseableRow(
-                      title: 'Total Recovered',
-                      value: widget.totalRecovered,
-                    ),
-                    ReuseableRow(
-                      title: 'Total Deaths',
-                      value: widget.totalDeaths,
-                    ),
-                    ReuseableRow(
-                      title: 'Total Population',
-                      value: widget.population,
-                    ),
-                  ],
+                      ReuseableRow(
+                        title: 'Today Cases',
+                        value: widget.todayCases,
+                      ),
+                      ReuseableRow(
+                        title: 'Total Cases',
+                        value: widget.totalCases,
+                      ),
+                      ReuseableRow(
+                        title: 'Total Recovered',
+                        value: widget.totalRecovered,
+                      ),
+                      ReuseableRow(
+                        title: 'Total Deaths',
+                        value: widget.totalDeaths,
+                      ),
+                      ReuseableRow(
+                        title: 'Total Population',
+                        value: widget.population,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-            CircleAvatar(
-              radius: 60,
-              backgroundImage: NetworkImage(widget.image),
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => Hero(
+                    tag: 'countryImage_${widget.countryName}',
+                    child: Dialog(
+                      backgroundColor: Colors.transparent,
+                      insetPadding: EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 100,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(color: Colors.black26, blurRadius: 10),
+                            ],
+                          ),
+                          child: Image.network(
+                            widget.image,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              child: Hero(
+                tag: 'countryImage_${widget.countryName}',
+                child: CircleAvatar(
+                  radius: 60,
+                  backgroundImage: NetworkImage(widget.image),
+                ),
+              ),
             ),
           ],
         ),

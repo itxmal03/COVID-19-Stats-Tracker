@@ -49,7 +49,7 @@ class _CountriesListState extends State<CountriesList> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(12.0),
               child: TextFormField(
                 onChanged: (value) {
                   Provider.of<StatsServices>(
@@ -223,7 +223,7 @@ class _CountriesListState extends State<CountriesList> {
                             countryName,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 17,
+                              fontSize: 15,
                             ),
                           ),
                           subtitle: Text(
