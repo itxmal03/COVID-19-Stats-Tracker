@@ -43,6 +43,7 @@ dependencies:
   connectivity_plus: ^7.0.0
   flutter_launcher_icons: ^0.14.4
   shared_preferences: ^2.5.4
+  flutter_staggered_animations: ^1.1.1
 
 dev_dependencies:
   flutter_test:

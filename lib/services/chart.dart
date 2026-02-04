@@ -35,7 +35,7 @@ class _AnimatedWorldStatsChartState extends State<AnimatedWorldStatsChart> {
       chartType: ChartType.ring,
       ringStrokeWidth: 15,
       chartRadius: MediaQuery.of(context).size.width / 3.5,
-      animationDuration: const Duration(milliseconds: 2700),
+      animationDuration: const Duration(milliseconds: 2500),
       colorList: [Colors.blue, Colors.green, Colors.red],
       chartValuesOptions: const ChartValuesOptions(
         showChartValuesInPercentage: true,

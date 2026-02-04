@@ -2,6 +2,7 @@ import 'package:covid_tracker/View/details_screen.dart';
 import 'package:covid_tracker/services/stats_services.dart';
 import 'package:covid_tracker/services/utilities/number_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -161,84 +162,96 @@ class _CountriesListState extends State<CountriesList> {
                   return Center(child: Text("No countries found."));
                 }
                 return Expanded(
-                  child: ListView.builder(
-                    itemCount: val.filteredCountriesList.length,
-                    itemBuilder: (context, index) {
-                      String countryName =
-                          val.filteredCountriesList[index]['country'];
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DetailsScreen(
-                                  countryName: countryName,
-                                  active: val
-                                      .filteredCountriesList[index]['active']
-                                      .toString(),
-                                  population: val
-                                      .filteredCountriesList[index]['population']
-                                      .toString(),
-                                  todayCases: val
-                                      .filteredCountriesList[index]['todayCases']
-                                      .toString(),
-                                  totalDeaths: val
-                                      .filteredCountriesList[index]['deaths']
-                                      .toString(),
-                                  totalCases: val
-                                      .filteredCountriesList[index]['cases']
-                                      .toString(),
-                                  totalRecovered: val
-                                      .filteredCountriesList[index]['recovered']
-                                      .toString(),
-                                  image: val
-                                      .filteredCountriesList[index]['countryInfo']['flag'],
-                                  continent: val
-                                      .filteredCountriesList[index]['continent'],
-                                  crtitcal: val
-                                      .filteredCountriesList[index]['critical']
-                                      .toString(),
+                  child: AnimationLimiter(
+                    child: ListView.builder(
+                      itemCount: val.filteredCountriesList.length,
+                      itemBuilder: (context, index) {
+                        String countryName =
+                            val.filteredCountriesList[index]['country'];
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AnimationConfiguration.staggeredList(
+                            position: index,
+                            duration: const Duration(milliseconds: 500),
+                            child: SlideAnimation(
+                              horizontalOffset: 50.0,
+                              child: FadeInAnimation(
+                                child: ListTile(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DetailsScreen(
+                                          countryName: countryName,
+                                          active: val
+                                              .filteredCountriesList[index]['active']
+                                              .toString(),
+                                          population: val
+                                              .filteredCountriesList[index]['population']
+                                              .toString(),
+                                          todayCases: val
+                                              .filteredCountriesList[index]['todayCases']
+                                              .toString(),
+                                          totalDeaths: val
+                                              .filteredCountriesList[index]['deaths']
+                                              .toString(),
+                                          totalCases: val
+                                              .filteredCountriesList[index]['cases']
+                                              .toString(),
+                                          totalRecovered: val
+                                              .filteredCountriesList[index]['recovered']
+                                              .toString(),
+                                          image: val
+                                              .filteredCountriesList[index]['countryInfo']['flag'],
+                                          continent: val
+                                              .filteredCountriesList[index]['continent'],
+                                          crtitcal: val
+                                              .filteredCountriesList[index]['critical']
+                                              .toString(),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  leading: SizedBox(
+                                    height: 35,
+                                    width: 50,
+                                    child: ClipRRect(
+                                      child: Image.network(
+                                        val.filteredCountriesList[index]['countryInfo']['flag'],
+                                        height: 50,
+                                        width: 50,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Icon(Icons.flag),
+                                      ),
+                                    ),
+                                  ),
+                                  trailing: Icon(Icons.arrow_forward_ios),
+                                  title: Text(
+                                    countryName,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    NumberFormatter.format(
+                                      double.tryParse(
+                                            val.filteredCountriesList[index]['cases']
+                                                    ?.toString() ??
+                                                '0',
+                                          ) ??
+                                          0,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            );
-                          },
-                          leading: SizedBox(
-                            height: 35,
-                            width: 50,
-                            child: ClipRRect(
-                              child: Image.network(
-                                val.filteredCountriesList[index]['countryInfo']['flag'],
-                                height: 50,
-                                width: 50,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Icon(Icons.flag),
-                              ),
                             ),
                           ),
-                          trailing: Icon(Icons.arrow_forward_ios),
-                          title: Text(
-                            countryName,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                            ),
-                          ),
-                          subtitle: Text(
-                            NumberFormatter.format(
-                              double.tryParse(
-                                    val.filteredCountriesList[index]['cases']
-                                            ?.toString() ??
-                                        '0',
-                                  ) ??
-                                  0,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 );
               },
