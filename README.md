@@ -134,3 +134,12 @@ Flutter Developer | Software Engineer
 ---
 
 ⭐ If you find this project helpful or educational, feel free to star the repository!
+
+
+## 📄 License
+
+This project is **not open source**.
+
+All rights are reserved by the author.  
+The code is shared publicly for **learning and portfolio viewing only**.
+
