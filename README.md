@@ -138,7 +138,15 @@ Flutter Developer | Software Engineer
 
 ## 📄 License
 
-This project is **not open source**.
+Copyright (c) 2026 Muhammad Aftab Liaqat
+
+All rights reserved.
+
+No part of this repository may be copied, modified, merged, published,
+distributed, sublicensed, or sold without the prior written permission
+of the author.
+
+Unauthorized use of this code is strictly prohibited.
 
 All rights are reserved by the author.  
 The code is shared publicly for **learning and portfolio viewing only**.
